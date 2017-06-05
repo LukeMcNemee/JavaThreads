@@ -16,12 +16,12 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) throws InterruptedException {
-        case01();
+        case02();
     }
 
-    public static void case01() {
-        Account a = new Account("A");
-        Account b = new Account("B");
+    public static void case01() throws InterruptedException {
+        Account a = new Account("A", 1);
+        Account b = new Account("B", 2);
         a.deposit(new BigDecimal("1000"));
         b.deposit(new BigDecimal("1000"));
 
@@ -31,15 +31,15 @@ public class Main {
         Transfer transAB = new Transfer(a, b, BigDecimal.TEN);
         Thread t = new Thread(transAB);
         t.start();
-
+        t.join();
         System.out.println(a.toString());
         System.out.println(b.toString());
 
     }
 
-    public static void case02() {
-        Account a = new Account("A");
-        Account b = new Account("B");
+    public static void case02() throws InterruptedException {
+        Account a = new Account("A", 1);
+        Account b = new Account("B", 2);
         a.deposit(new BigDecimal("1000"));
         b.deposit(new BigDecimal("1000"));
 
@@ -53,6 +53,9 @@ public class Main {
         Thread t2 = new Thread(transBA);
         t1.start();
         t2.start();        
+        
+        t1.join();
+        t2.join();
         
         System.out.println(a.toString());
         System.out.println(b.toString());

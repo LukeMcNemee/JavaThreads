@@ -6,12 +6,12 @@ import java.math.BigDecimal;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 /**
  *
  * @author lukemcnemee
  */
-public class Transfer implements Runnable{
+public class Transfer implements Runnable {
+
     Account from;
     Account to;
     BigDecimal amount;
@@ -20,18 +20,26 @@ public class Transfer implements Runnable{
         this.from = from;
         this.to = to;
         this.amount = amount;
-    }    
-    
+    }
+
     @Override
     public void run() {
-        synchronized(from){
-            from.withdraw(amount);
-            
-            synchronized(to){
-                to.deposit(amount);
-                
+        if (from.getId() > to.getId()) {
+
+            synchronized (from) {
+                synchronized (to) {
+                    to.deposit(amount);
+                    from.withdraw(amount);
+                }
+            }
+        } else {
+            synchronized (to) {
+                synchronized (from) {
+                    to.deposit(amount);
+                    from.withdraw(amount);
+                }
             }
         }
     }
-    
+
 }
